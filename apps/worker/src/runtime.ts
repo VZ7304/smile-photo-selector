@@ -21,4 +21,5 @@ export type WorkerBindings = {
   APP_ENV: string;
   APP_VERSION: string;
   CORS_ORIGIN: string;
+  GOOGLE_OAUTH_CLIENT_ID?: string;
 };

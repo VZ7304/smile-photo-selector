@@ -1,5 +1,11 @@
 const encoder = new TextEncoder();
-const PASSWORD_ITERATIONS = 120_000;
+
+// Workers Free currently allows 10 ms CPU/request. Keep PBKDF2 deliberately
+// parameterized so hashes remain upgradeable later without a schema change.
+// Phase 9 hardening can raise this when the runtime budget changes and can
+// transparently rehash accounts after successful login.
+const PASSWORD_ITERATIONS = 10_000;
+const MIN_SUPPORTED_PASSWORD_ITERATIONS = 10_000;
 const PASSWORD_BYTES = 32;
 const SALT_BYTES = 16;
 
@@ -75,7 +81,7 @@ export async function verifyPassword(
     params.algorithm !== 'PBKDF2' ||
     params.hash !== 'SHA-256' ||
     !Number.isInteger(params.iterations) ||
-    params.iterations < 50_000 ||
+    params.iterations < MIN_SUPPORTED_PASSWORD_ITERATIONS ||
     params.dkLen !== PASSWORD_BYTES
   ) {
     return false;

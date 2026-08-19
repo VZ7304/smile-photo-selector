@@ -4,11 +4,19 @@ import { authRoutes } from './routes/auth';
 import { adminUserRoutes } from './routes/admin-users';
 import { customerRoutes } from './routes/customer';
 import { healthRoutes } from './routes/health';
+import { setupRoutes } from './routes/setup';
 import type { WorkerBindings } from './runtime';
 
 const app = new Hono<{ Bindings: WorkerBindings }>();
 
 app.use('/api/*', async (c, next) => {
+  const requestOrigin = c.req.header('Origin');
+  const ownOrigin = new URL(c.req.url).origin;
+
+  if (!requestOrigin || requestOrigin === ownOrigin) {
+    return next();
+  }
+
   const middleware = cors({
     origin: c.env.CORS_ORIGIN,
     credentials: true,
@@ -19,6 +27,7 @@ app.use('/api/*', async (c, next) => {
 });
 
 app.route('/api/v1', healthRoutes);
+app.route('/api/v1', setupRoutes);
 app.route('/api/v1', authRoutes);
 app.route('/api/v1', adminUserRoutes);
 app.route('/api/v1', customerRoutes);

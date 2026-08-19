@@ -4,8 +4,8 @@ compatibility_date = "2026-08-19"
 workers_dev = true
 
 [vars]
-APP_ENV = "development"
-APP_VERSION = "0.1.0"
+APP_ENV = "production"
+APP_VERSION = "0.2.0"
 CORS_ORIGIN = "http://localhost:5173"
 
 [[d1_databases]]

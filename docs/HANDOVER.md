@@ -31,12 +31,20 @@ This repository implements the new product independently from the Apps Script de
 - adapter interface contracts
 - architecture/data/API/test/backup docs
 
+### Phase 1 deployment status — 2026-08-19
+- GitHub repository created and source pushed to `VZ7304/smile-photo-selector`.
+- Cloudflare D1 database created: `smile-photo-selector-dev`.
+- D1 database ID wired into `apps/worker/wrangler.toml`.
+- Remote D1 migration V1 executed successfully from Cloudflare Dashboard.
+- Remote schema verification PASS: 11 tables present (`app_logs`, `drafts`, `images`, `jobs`, `order_items`, `orders`, `project_users`, `projects`, `sessions`, `users`, `visual_index_items`).
+- Remaining Phase 1 gate: deploy Worker and verify `/api/v1/health` returns `status=ok` with D1 reachable; then deploy/connect web shell if needed for final browser verification.
+
 ### NOT YET BUILT
 Auth, users UI, assignment UI, Drive importer, manifest, gallery, PWA cache, draft/autosave, order submit, admin order UI, direct downloader, filename-file search, visual search, notifications, cleanup, backup automation.
 
 ## Hard rule
 
-Do not start the next feature phase until Phase 0/1 acceptance gate passes locally.
+Do not start the next feature phase until Phase 0/1 acceptance gate passes. Phase 1 is not complete until the deployed Worker health check confirms D1 connectivity.
 
 ## Phase order
 

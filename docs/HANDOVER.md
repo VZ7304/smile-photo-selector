@@ -31,26 +31,32 @@ This repository implements the new product independently from the Apps Script de
 - adapter interface contracts
 - architecture/data/API/test/backup docs
 
-### Phase 1 deployment status — 2026-08-19
+### Phase 1 deployment status — PASS — 2026-08-19
 - GitHub repository created and source pushed to `VZ7304/smile-photo-selector`.
 - Cloudflare D1 database created: `smile-photo-selector-dev`.
-- D1 database ID wired into `apps/worker/wrangler.toml`.
+- D1 database ID wired into Wrangler configuration.
 - Remote D1 migration V1 executed successfully from Cloudflare Dashboard.
 - Remote schema verification PASS: 11 tables present (`app_logs`, `drafts`, `images`, `jobs`, `order_items`, `orders`, `project_users`, `projects`, `sessions`, `users`, `visual_index_items`).
-- Remaining Phase 1 gate: deploy Worker and verify `/api/v1/health` returns `status=ok` with D1 reachable; then deploy/connect web shell if needed for final browser verification.
+- Worker deployed successfully from GitHub through Cloudflare Builds.
+- Production workers.dev URL enabled: `smile-photo-selector.zico-antopho.workers.dev`.
+- Production health check PASS at `/api/v1/health`: `status=ok`, `d1=ok`, version `0.1.0`, environment `development`.
+- PHASE 1 ACCEPTANCE GATE: PASS.
+
+### NEXT — PHASE 2
+Auth, accounts, session lifecycle, ADMIN/CUSTOMER authorization, password issue/reset flow, account list UI, and exactly-one-ACTIVE-project assignment.
 
 ### NOT YET BUILT
-Auth, users UI, assignment UI, Drive importer, manifest, gallery, PWA cache, draft/autosave, order submit, admin order UI, direct downloader, filename-file search, visual search, notifications, cleanup, backup automation.
+Drive importer, manifest, gallery, PWA cache, draft/autosave, order submit, admin order UI, direct downloader, filename-file search, visual search, notifications, cleanup, backup automation.
 
 ## Hard rule
 
-Do not start the next feature phase until Phase 0/1 acceptance gate passes. Phase 1 is not complete until the deployed Worker health check confirms D1 connectivity.
+Do not start the next feature phase until the preceding acceptance gate passes. Phase 1 is now complete and Phase 2 may begin.
 
 ## Phase order
 
 0. Freeze spec/docs
-1. Scaffold + health + D1
-2. Auth + accounts + assignment
+1. Scaffold + health + D1 — PASS
+2. Auth + accounts + assignment — NEXT
 3. Project + Drive import
 4. Manifest + gallery
 5. Selection + draft + order

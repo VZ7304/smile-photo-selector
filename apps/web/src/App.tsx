@@ -49,14 +49,14 @@ type ApiErrorBody = { error?: { message?: string } };
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
 
-async function api<T>(path: string, init?: RequestInit): Promise<T> {
+async function api<T = unknown>(path: string, init?: RequestInit): Promise<T> {
+  const headers = new Headers(init?.headers);
+  if (init?.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+
   const response = await fetch(`${API_BASE}/api/v1${path}`, {
-    credentials: 'include',
     ...init,
-    headers: {
-      ...(init?.body ? { 'Content-Type': 'application/json' } : {}),
-      ...(init?.headers ?? {}),
-    },
+    credentials: 'include',
+    headers,
   });
 
   if (!response.ok) {
@@ -326,6 +326,7 @@ function AdminDashboard({ session, onLogout }: { session: Session; onLogout: () 
   }
 
   const customers = users.filter((user) => user.role === 'CUSTOMER');
+  const assignableProjects = projects.filter((project) => project.assignable);
 
   return (
     <main className="app-shell">
@@ -375,13 +376,16 @@ function AdminDashboard({ session, onLogout }: { session: Session; onLogout: () 
                       <span>Album đang gán</span>
                       <select
                         value={user.activeProject?.projectId ?? ''}
-                        disabled={busy || projects.filter((project) => project.assignable).length === 0}
+                        disabled={busy || (assignableProjects.length === 0 && !user.activeProject)}
                         onChange={(event) => void assignProject(user, event.target.value)}
                       >
                         <option value="">Chưa gán album</option>
-                        {projects.filter((project) => project.assignable).map((project) => (
+                        {assignableProjects.map((project) => (
                           <option value={project.projectId} key={project.projectId}>{project.projectName}</option>
                         ))}
+                        {user.activeProject && !assignableProjects.some((project) => project.projectId === user.activeProject?.projectId) ? (
+                          <option value={user.activeProject.projectId} disabled>{user.activeProject.projectName} · {user.activeProject.status}</option>
+                        ) : null}
                       </select>
                       {projects.length === 0 ? <small>Album sẽ xuất hiện ở đây sau Phase 3 · Drive Import.</small> : null}
                     </div>

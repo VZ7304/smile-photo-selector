@@ -1,0 +1,14 @@
+{
+  "name": "@smile/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@smile/shared": "*",
+    "hono": "4.13.0",
+    "zod": "4.4.3"
+  }
+}

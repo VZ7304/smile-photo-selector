@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { authRoutes } from './routes/auth';
 import { adminUserRoutes } from './routes/admin-users';
+import { adminProjectRoutes } from './routes/admin-projects';
 import { customerRoutes } from './routes/customer';
 import { healthRoutes } from './routes/health';
 import { setupRoutes } from './routes/setup';
@@ -30,6 +31,7 @@ app.route('/api/v1', healthRoutes);
 app.route('/api/v1', setupRoutes);
 app.route('/api/v1', authRoutes);
 app.route('/api/v1', adminUserRoutes);
+app.route('/api/v1', adminProjectRoutes);
 app.route('/api/v1', customerRoutes);
 
 app.notFound((c) => c.json({ error: { code: 'NOT_FOUND', message: 'Route not found' } }, 404));
